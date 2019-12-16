@@ -17,11 +17,5 @@
         "virtualenv",
         "pipenv"
     ],
-    "dependency_file": [
-        "none",
-        "requirements.txt",
-        "environment.yml",
-        "Pipfile"
-    ],
     "open_source_license": ["MIT", "BSD-3-Clause", "No license file"]
 }

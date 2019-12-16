@@ -1,6 +1,5 @@
-import click
 from click.testing import CliRunner
-from src.data.make_dataset import main
+from {{ cookiecutter.module_name }}.data.make_dataset import main
 
 def test_main():
     runner = CliRunner()
