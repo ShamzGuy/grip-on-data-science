@@ -6,17 +6,19 @@
 
 PROJECT_DIR := $(shell dirname $(realpath $(lastword $(MAKEFILE_LIST))))
 PROJECT_NAME = {{ cookiecutter.repo_name }}
-PYTHON_INTERPRETER = python{{ cookiecutter.python_version_number }}
+PYTHON_INTERPRETER = python
 
 
 #################################################################################
 # COMMANDS                                                                      #
 #################################################################################
 
-## Install Python Dependencies
-requirements:
-	$(PYTHON_INTERPRETER) -m pip install -U pip setuptools wheel
-	$(PYTHON_INTERPRETER) -m pip install -r requirements.txt
+## Install or Update Python Dependencies
+requirements: environment.lock
+
+environment.lock: environment.yml
+	conda env update -n $(PROJECT_NAME) -f $<
+	conda env export -n $(PROJECT_NAME) -f $@
 
 ## Make Dataset
 data: requirements
@@ -31,21 +33,20 @@ clean:
 lint:
 	flake8 {{ cookiecutter.module_name }}
 
-{% if cookiecutter.environment_manager != 'none' %}
 ## Set up python interpreter environment
 create_environment:
-	{% if cookiecutter.environment_manager == 'conda' %}
-	conda create --name $(PROJECT_NAME) python={{ cookiecutter.python_version_number }}{% if cookiecutter.dependency_file == 'environment.yml' %} -f environment.yml{% endif %}
-	@echo ">>> conda env created. Activate with:\nconda activate $(PROJECT_NAME)"	
-	{% elif cookiecutter.environment_manager == 'virtualenv' %}
-	@bash -c "source `which virtualenvwrapper.sh`;mkvirtualenv $(PROJECT_NAME) --python=$(PYTHON_INTERPRETER)"
-	@echo ">>> New virtualenv created. Activate with:\nworkon $(PROJECT_NAME)"
-	{% elif cookiecutter.environment_manager == 'pipenv' %}
-	pipenv install
-	@echo ">>> New pipenv created. Activate with:\npipenv shell"
-	{% endif %}
-{% endif %}
+ifneq ("X$(wildcard ./environment.lock)","X")
+	conda env create --name $(PROJECT_NAME) python={{ cookiecutter.python_version_number }} -f environment.lock
+else
+	@echo ">>> Creating lockfile from conda environment specification."
+	conda env create --name $(PROJECT_NAME) python={{ cookiecutter.python_version_number }} -f environment.yml
+	conda env export --name $(PROJECT_NAME) -f environment.lock
+endif
+	@echo ">>> New conda env created. Activate with: 'conda activate $(PROJECT_NAME)'"
 
+delete_environment:
+	@echo "Deleting conda environment."
+	conda env remove -n $(PROJECT_NAME)
 
 #################################################################################
 # PROJECT RULES                                                                 #
