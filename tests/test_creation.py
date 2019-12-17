@@ -64,6 +64,11 @@ class TestCookieSetup(object):
         else:
             assert p == "MIT"
 
+    def test_environmentyml(self):
+        environment_path = self.path / "environment.yml"
+        assert environment_path.exists()
+        assert no_curlies(environment_path)
+
     def test_makefile(self):
         makefile_path = self.path / "Makefile"
         assert makefile_path.exists()
@@ -95,3 +100,9 @@ class TestCookieSetup(object):
         abs_dirs, _, _ = list(zip(*os.walk(self.path)))
         print(set(abs_expected_dirs + ignored_dirs) - set(abs_dirs))
         assert len(set(abs_expected_dirs + ignored_dirs) - set(abs_dirs)) == 0
+
+    def test_generic_project_tests_pass(self):
+        test_path = self.path / "tests"
+        assert test_path.exists()
+        exit_code = os.system(f"pytest {test_path}")
+        assert exit_code == 0, "Running tests in generated project fails"
