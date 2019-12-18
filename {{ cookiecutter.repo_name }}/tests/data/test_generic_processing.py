@@ -1,5 +1,5 @@
 from click.testing import CliRunner
-from {{ cookiecutter.module_name }}.data.make_dataset import main
+from {{ cookiecutter.module_name }}.data.generic_processing import main
 
 def test_main():
     runner = CliRunner()

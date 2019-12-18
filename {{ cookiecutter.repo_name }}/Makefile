@@ -23,8 +23,7 @@ environment.lock: environment.yml
 	conda env export -n $(PROJECT_NAME) -f $@
 
 ## Make Dataset
-data: requirements
-	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/data/make_dataset.py
+data: requirements data/processed/dataset.csv
 
 ## Delete all compiled Python files
 clean:
@@ -69,6 +68,25 @@ delete_environment:
 #################################################################################
 # PROJECT RULES                                                                 #
 #################################################################################
+
+## Fetch data into data/raw directory
+data/raw:
+	@echo "Fetching raw data..."
+	mkdir -p $@
+
+## Run generic processing and cleanup scripts to produce interim data
+data/interim: {{ cookiecutter.module_name }}/data/make_dataset.py data/raw
+	@echo "Refining raw data..."
+	mkdir -p $@
+	$(PYTHON_INTERPRETER) $^ $@
+
+data/processed:
+	mkdir -p $@
+
+## Extract features and produce final dataset
+data/processed/%: {{ cookiecutter.module_name }}/data/build_features.py data/interim | data/processed
+	@echo "Producing dataset..."
+	$(PYTHON_INTERPRETER) $^ $|
 
 
 
