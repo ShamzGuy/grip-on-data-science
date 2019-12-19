@@ -4,6 +4,8 @@ import logging
 import logging.config
 from pathlib import Path
 from sklearn.model_selection import train_test_split
+from joblib import dump
+from .model_config import TARGET_NAME, MODELS
 from ..log_config import LOGGING
 from ..utils import read_file, to_file
 
@@ -34,6 +36,21 @@ def split(input_file, output_filepath):
     logger.info("Test set has %d lines.", len(test.index))
     to_file(train, output_dir / "train.csv")
     to_file(test, output_dir / "test.csv")
+
+
+@main.command()
+@click.argument("train_file", type=click.Path(exists=True))
+@click.argument("output_path", type=click.Path())
+def train(train_file, output_path):
+    logger.info("Start training %d models...", len(MODELS.keys()))
+    train = read_file(train_file)
+    X, y = train.drop(columns=[TARGET_NAME]), train[TARGET_NAME]
+    output_pathobj = Path(output_path)
+    for name, model in MODELS.items():
+        logger.debug("Training model %s", name)
+        model.fit(X, y)
+        logger.info("Score for model %s: %d", name, model.score(X, y))
+        dump(model, output_pathobj / name)
 
 
 if __name__ == "__main__":

@@ -27,7 +27,11 @@ data: requirements data/processed/dataset.csv
 
 ## Split into train and test set
 train_test_split: data/processed/dataset.csv
-	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/train_model.py $^ data/processed
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/train_model.py split $^ data/processed
+
+## Train the models configured in model_config.py
+train: {{ cookiecutter.module_name }}/models/model_config.py train_test_split
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models.train_model.py train data/processed/train.csv models
 
 ## Delete all compiled Python files
 clean:
