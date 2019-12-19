@@ -25,6 +25,10 @@ environment.lock: environment.yml
 ## Make Dataset
 data: requirements data/processed/dataset.csv
 
+## Split into train and test set
+train_test_split: data/processed/dataset.csv
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/train_model.py $^ data/processed
+
 ## Delete all compiled Python files
 clean:
 	find . -type f -name "*.py[co]" -delete
