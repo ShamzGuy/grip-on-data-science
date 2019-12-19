@@ -2,10 +2,10 @@
 import click
 import logging
 import logging.config
-import pandas as pd
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from ..log_config import LOGGING
+from ..utils import read_file, to_file
 
 
 logging.config.dictConfig(LOGGING)
@@ -27,13 +27,13 @@ def split(input_file, output_filepath):
     """
     logger.info("Splitting into train and test set...")
     output_dir = Path(output_filepath)
-    dataset = pd.read_csv(input_file)
+    dataset = read_file(input_file)
     logger.info("Dataset has %d lines.", len(dataset.index))
     train, test = train_test_split(dataset)
     logger.info("Train set has %d lines.", len(train.index))
     logger.info("Test set has %d lines.", len(test.index))
-    train.to_csv(output_dir / "train.csv", index=False)
-    test.to_csv(output_dir / "test.csv", index=False)
+    to_file(train, output_dir / "train.csv")
+    to_file(test, output_dir / "test.csv")
 
 
 if __name__ == "__main__":
