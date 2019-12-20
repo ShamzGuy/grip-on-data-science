@@ -30,7 +30,7 @@ train_test_split: data/processed/dataset.csv
 	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/train_model.py split $^ data/processed
 
 ## Train the models configured in model_config.py
-train: {{ cookiecutter.module_name }}/models/model_config.py train_test_split
+train: train_test_split
 	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models.train_model.py train data/processed/train.csv models
 
 ## Delete all compiled Python files
@@ -83,18 +83,18 @@ data/raw:
 	mkdir -p $@
 
 ## Run generic processing and cleanup scripts to produce interim data
-data/interim: {{ cookiecutter.module_name }}/data/make_dataset.py data/raw
+data/interim: data/raw
 	@echo "Refining raw data..."
 	mkdir -p $@
-	$(PYTHON_INTERPRETER) $^ $@
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/data/generic_processing.py $^ $@
 
 data/processed:
 	mkdir -p $@
 
 ## Extract features and produce final dataset
-data/processed/%: {{ cookiecutter.module_name }}/data/build_features.py data/interim | data/processed
+data/processed/dataset.csv: data/interim | data/processed
 	@echo "Producing dataset..."
-	$(PYTHON_INTERPRETER) $^ $|
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/features/build_features.py $^ $|
 
 
 
