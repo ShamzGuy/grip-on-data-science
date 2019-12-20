@@ -4,8 +4,14 @@ dependencies:
   - pip
   - setuptools
   - wheel
+  - pandas
+  - scikit-learn
+  - click
+  - pytest
   - pip:
       - awscli
       - python-dotenv
+      - pytest-sugar
+      - pytest-cov
       - -e .
   - python>=3.6
