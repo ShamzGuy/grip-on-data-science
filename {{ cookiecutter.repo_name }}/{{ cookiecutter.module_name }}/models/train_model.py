@@ -5,9 +5,9 @@ import logging.config
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from joblib import dump
-from .model_config import TARGET_NAME, MODELS
-from ..log_config import LOGGING
-from ..utils import read_file, to_file
+from {{ cookiecutter.module_name }}.models.model_config import TARGET_NAME, MODELS
+from {{ cookiecutter.module_name }}.log_config import LOGGING
+from {{ cookiecutter.module_name }}.utils import read_file, to_file
 
 
 logging.config.dictConfig(LOGGING)

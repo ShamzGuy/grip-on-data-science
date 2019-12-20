@@ -2,7 +2,7 @@
 import click
 import logging
 import logging.config
-from ..log_config import LOGGING
+from {{ cookiecutter.module_name }}.log_config import LOGGING
 
 
 logging.config.dictConfig(LOGGING)
