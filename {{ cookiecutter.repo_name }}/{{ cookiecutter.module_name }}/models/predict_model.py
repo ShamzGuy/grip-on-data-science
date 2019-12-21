@@ -37,7 +37,7 @@ def evaluate(test_file, model_path, output_file):
         logger.info("Metrics for model %s: %s", name, metric_results)
         metrics_per_model[name] = metric_results
     with open(output_file, "w+") as f:
-        json.dump(metrics_per_model, f)
+        json.dump(metrics_per_model, f, indent=2)
 
 
 if __name__ == "__main__":
