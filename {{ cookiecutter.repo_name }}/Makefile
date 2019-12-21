@@ -31,10 +31,10 @@ train_test_split: data/processed/dataset.csv
 
 ## Train the models configured in model_config.py
 train: train_test_split
-	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models.train_model.py train data/processed/train.csv models
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/train_model.py train data/processed/train.csv models
 
 ## Evaluate the models on the test set
-evaluate: data/models/report.json
+evaluate: models/report.json
 
 ## Delete all compiled Python files
 clean:
@@ -99,8 +99,8 @@ data/processed/dataset.csv: data/interim | data/processed
 	@echo "Producing dataset..."
 	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/features/build_features.py $^ $|
 
-data/models/report.json: train {{ cookiecutter.module_name }}/models/metric_config.py
-	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/predict_model.py evaluate data/processed/test.csv data/models $@
+models/report.json: train {{ cookiecutter.module_name }}/models/metric_config.py
+	$(PYTHON_INTERPRETER) {{ cookiecutter.module_name }}/models/predict_model.py evaluate data/processed/test.csv models $@
 
 
 #################################################################################
