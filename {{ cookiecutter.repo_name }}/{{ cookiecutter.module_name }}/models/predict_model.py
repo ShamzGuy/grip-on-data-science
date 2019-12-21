@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 def main():
     pass
 
+
 @main.command()
 @click.argument("test_file", type=click.Path(exists=True))
 @click.argument("model_path", type=click.Path(exists=True))

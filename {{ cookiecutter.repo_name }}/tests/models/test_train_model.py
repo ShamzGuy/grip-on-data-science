@@ -11,6 +11,7 @@ OBJECTID,{TARGET_NAME}
 4,1
 """
 
+
 def test_split():
     runner = CliRunner()
     with runner.isolated_filesystem():
@@ -18,6 +19,7 @@ def test_split():
             f.write(CSV_DATA)
         result = runner.invoke(main, ["split", "dataset.csv", "."])
         assert result.exit_code == 0
+
 
 def test_train():
     runner = CliRunner()

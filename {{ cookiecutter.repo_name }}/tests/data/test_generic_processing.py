@@ -1,6 +1,7 @@
 from click.testing import CliRunner
 from {{ cookiecutter.module_name }}.data.generic_processing import main
 
+
 def test_main():
     runner = CliRunner()
     with runner.isolated_filesystem():
