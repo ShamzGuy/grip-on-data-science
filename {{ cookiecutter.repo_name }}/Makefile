@@ -45,6 +45,13 @@ clean:
 lint:
 	flake8 {{ cookiecutter.module_name }}
 
+## Clean output of jupyter notebooks
+clean_nb_%:
+	jupyter nbconvert --ClearOutputPreprocessor.enabled=True --inplace notebooks/$*.ipynb
+
+## Clean output of all jupyter notebooks
+cleanall_nb: $(patsubst notebooks/%.ipynb,clean_nb_%,$(wildcard notebooks/*.ipynb))
+
 ## Upload Data to S3
 sync_data_up:
 ifeq (default,$(PROFILE))

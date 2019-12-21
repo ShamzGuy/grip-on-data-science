@@ -8,6 +8,8 @@ dependencies:
   - scikit-learn
   - click
   - pytest
+  - jupyterlab
+  - nbconvert
   - pip:
       - awscli
       - python-dotenv
