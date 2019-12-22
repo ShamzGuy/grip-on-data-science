@@ -98,7 +98,6 @@ class TestCookieSetup(object):
         ignored_dirs = [str(self.path)]
         abs_expected_dirs = [str(self.path / d) for d in expected_dirs]
         abs_dirs, _, _ = list(zip(*os.walk(self.path)))
-        print(set(abs_expected_dirs + ignored_dirs) - set(abs_dirs))
         assert len(set(abs_expected_dirs + ignored_dirs) - set(abs_dirs)) == 0
 
     def test_generic_project_tests_pass(self):
@@ -106,3 +105,10 @@ class TestCookieSetup(object):
         assert test_path.exists()
         exit_code = os.system(f"pytest {test_path}")
         assert exit_code == 0, "Running tests in generated project fails"
+
+    def test_no_reformatting_by_black_necessary(self):
+        black_paths = [self.path / self.path.name, self.path / "tests"]
+        for path in black_paths:
+            assert path.exists()
+            exit_code = os.system(f"black {path} --check")
+            assert exit_code == 0, "Running black shows that reformatting is necessary"
