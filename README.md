@@ -6,7 +6,7 @@ especially tailored towards beginners._
 
 ## Quickstart
 
-The following should get you set up quickly. For more details, consult the documentation.
+The following should get you set up quickly. For more details, [consult the documentation](https://wavefrontset.github.io/grip-on-data-science/#getting-started).
 
 ### Requirements to use the cookiecutter template:
 -----------
