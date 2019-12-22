@@ -1,14 +1,16 @@
-# Cookiecutter Data Science
+# GriP on Data Science
 
-_A logical, reasonably standardized, but flexible project structure for doing and sharing data science work._
+_Based on [Cookiecutter Data Science](https://github.com/drivendata/cookiecutter-data-science), this Data Science
+project template aims to provide a more opinionated and firm framework,
+especially tailored towards beginners._
 
+## Quickstart
 
-#### [Project homepage](http://drivendata.github.io/cookiecutter-data-science/)
-
+The following should get you set up quickly. For more details, consult the documentation.
 
 ### Requirements to use the cookiecutter template:
 -----------
- - Python 2.7 or 3.5
+ - Python>=3.6
  - [Cookiecutter Python package](http://cookiecutter.readthedocs.org/en/latest/installation.html) >= 1.4.0: This can be installed with pip by or conda depending on how you manage your Python packages:
 
 ``` bash
@@ -26,66 +28,33 @@ $ conda install cookiecutter
 ### To start a new project, run:
 ------------
 
-    cookiecutter https://github.com/drivendata/cookiecutter-data-science
+    cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
+    
+### Create a new `conda` environment:
+------------
+    
+    make create_environment
 
-
-[![asciicast](https://asciinema.org/a/244658.svg)](https://asciinema.org/a/244658)
-
-
-### The resulting directory structure
+### Overview over the next steps
 ------------
 
-The directory structure of your new project looks like this: 
+After activating the `conda` environment, you are all set up. Here are the next
+steps:
 
-```
-├── LICENSE
-├── Makefile           <- Makefile with commands like `make data` or `make train`
-├── README.md          <- The top-level README for developers using this project.
-├── data
-│   ├── external       <- Data from third party sources.
-│   ├── interim        <- Intermediate data that has been transformed.
-│   ├── processed      <- The final, canonical data sets for modeling.
-│   └── raw            <- The original, immutable data dump.
-│
-├── docs               <- A default Sphinx project; see sphinx-doc.org for details
-│
-├── models             <- Trained and serialized models, model predictions, or model summaries
-│
-├── notebooks          <- Jupyter notebooks. Naming convention is a number (for ordering),
-│                         the creator's initials, and a short `-` delimited description, e.g.
-│                         `1.0-jqp-initial-data-exploration`.
-│
-├── references         <- Data dictionaries, manuals, and all other explanatory materials.
-│
-├── reports            <- Generated analysis as HTML, PDF, LaTeX, etc.
-│   └── figures        <- Generated graphics and figures to be used in reporting
-│
-├── requirements.txt   <- The requirements file for reproducing the analysis environment, e.g.
-│                         generated with `pip freeze > requirements.txt`
-│
-├── {{ cookiecutter.module_name }}                <- Source code for use in this project.
-│   ├── __init__.py    <- Makes {{ cookiecutter.module_name }} a Python module
-│   │
-│   ├── data           <- Scripts to download or generate data
-│   │   └── make_dataset.py
-│   │
-│   ├── features       <- Scripts to turn raw data into features for modeling
-│   │   └── build_features.py
-│   │
-│   ├── models         <- Scripts to train models and then use trained models to make
-│   │   │                 predictions
-│   │   ├── predict_model.py
-│   │   └── train_model.py
-│   │
-│   └── visualization  <- Scripts to create exploratory and results oriented visualizations
-│       └── visualize.py
-│
-└── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
-```
+- Define how to obtain the raw data of your project and update the `data/raw`
+  target in the `Makefile` accordingly.
+- Define generic processing and clean up transformations in 
+  `{{ cookiecutter.module_name }}/data/generic_processing.py` to produce interim data.
+- Define project specific transformations to obtain the final data set in 
+  `{{ cookiecutter.module_name }}/features/build_features.py`.
+- Edit `{{ cookiecutter.module_name }}/models/model_config.py` to decide what
+  models you want to build and what the target value of the prediction will be.
+  Issuing `make train` will automatically split your dataset into a train and a
+  test set and then fit the models on the train set.
+- Edit `{{ cookiecutter.module_name }}/models/metric_config.py` to decide what
+  metrics you want to use to evaluate the model performance. Issuing `make
+  evaluate` will evaluate the models using the defined metrics on the test set.
 
-## Contributing
-
-We welcome contributions! [See the docs for guidelines](https://drivendata.github.io/cookiecutter-data-science/#contributing).
 
 ### Installing development requirements
 ------------
@@ -95,4 +64,4 @@ We welcome contributions! [See the docs for guidelines](https://drivendata.githu
 ### Running the tests
 ------------
 
-    py.test tests
+    pytest tests

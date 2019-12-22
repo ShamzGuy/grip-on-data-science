@@ -31,12 +31,61 @@ project.
 
 While the aforementioned template tackles a lot of the weaknesses of the
 Cookiecutter Data Science template, I find that it is too sophisticated and not
-well-documented enough to be easy to use. Thus, I decided to take the middle
+well-documented enough to be easy to use (even though the maintainers started an
+[example project](https://github.com/hackalog/bus_number) explaining their
+template structure and how to use it). Thus, I decided to take the middle
 ground between the two.
+
+### Start with 100% test coverage
+
+Depending on the amount of data, transformations may take quite some time and
+should be tested before they run on the whole dataset -- it's aggravating when a
+ten minute transformation yields the wrong result because you applied it to the
+wrong column.
+
+This project provides you with tests that illustrate how your command line
+scripts that apply the transformation can be tested.
+
+### Be as elaborate as you want with your log messages
+
+With the logging configuration that comes with this project, all `INFO` level
+messages will be emitted to the console. If you need more detailed information
+but do not want to pollute the console, use the `DEBUG` level that will be
+automatically logged into log files in the `log` folder.
+
+### Code style: black
+
+The initial code and tests are formatted by `black`.
+
+### Use pre-defined `make` targets for common tasks
+
+There are pre-defined `make` targets that 
+
+- help you define your data transformation pipeline until you arrive at your
+final dataset (`make data/raw`, `make data/interim`, `make
+data/processed/dataset.csv`) and
+- accelerate choosing and evaluating Machine Learning models (`make train` and
+`make evaluate`).
+
+The latter are configured via simple dictionaries. Details below. 
 
 ## Getting started
 
 ### Requirements
+
+- Python>=3.6
+- [Cookiecutter Python package](http://cookiecutter.readthedocs.org/en/latest/installation.html) >= 1.4.0: This can be installed with pip by or conda depending on how you manage your Python packages:
+
+``` bash
+$ pip install cookiecutter
+```
+
+or
+
+``` bash
+$ conda config --add channels conda-forge
+$ conda install cookiecutter
+```
 
 ### Starting a new project
 
@@ -46,7 +95,91 @@ Starting a new project is as easy as running this command at the command line. N
 cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
 ```
 
+#### Create a new environment
+
+After the new project has been created you should create a new `conda` environment
+using
+
+```nohighlight
+make create_environment
+```
+
+Activate it using `conda activate project_name`.
+
+#### Implement the `data/raw` target
+
+The `data/raw` target is the specification of how to obtain the raw data of your
+project. At the beginning, it is left empty. Decide what you need to do to
+obtain the raw data and decide how to save it. If necessary, write a script next
+to the `generic_processing.py` script.
+
+#### Implement generic clean ups and transformations
+
+The `data/interim` target is for generic clean ups and transformations
+(examples: Removing unnecessary columns, removing duplicated rows). It aims at
+the `generic_processing.py` script. Edit it according to your needs.
+
+#### Implement transformations and aggregations resulting in your final dataset
+
+The `data/processed/dataset.csv` target is the road to your final dataset. This
+dataset will be used to train a model. The target aims at the
+`build_features.py` script. Edit it according to your needs.
+
+#### Decide which models to train
+
+Models are trained via the `train` target. Edit the `MODELS` dictionary in the
+`model_config.py` file to configure which models to train. The `TARGET_VALUE`
+constant should contain the name of the column that is the prediction target of
+your models.
+
+*Example*: If you want to fit a Linear Regression model as well as
+a Decision Tree with standard hyperparameters, use
+
+```python
+from sklearn.linear_model import LinearRegression
+from sklearn.tree import DecisionTreeRegressor
+
+MODELS = {
+    "linearRegression": LinearRegression(),
+    "decisionTree": DecisionTreeRegressor(),
+}
+```
+
+Issuing `make train` will fit both models to the train set and dump the
+resulting models into the folder `models/`. The filename of each model will be
+its key.
+
+Note that this target automatically invokes the `train_test_split` target that
+splits `data/processed/dataset.csv` into a train set `train.csv` and a test set
+`test.csv`.
+
+#### Evaluate your models
+
+Models are evaluated via the `evaluate` target. Edit the `METRICS` dictionary in
+the `metric_config.py` file to configure which metrics to evaluate for each model.
+
+*Example*: If you want to evaluate both models from the above paragraph using
+R2-Score and mean absolute error, use
+
+```python
+from sklearn.metrics import r2_score, mean_absolute_error
+
+METRICS = {
+    "linearRegression": [r2_score, mean_absolute_error],
+    "decisionTree": [r2_score, mean_absolute_error],
+}
+```
+
+Issuing `make evaluate` will deserialize both models and evaluate them using the
+defined metrics on the test set. The results are printed to the console and,
+additionally, will be written into the file `models/report.json`.
+
 ## Directory structure
+
+The majority is the same as in the basic Cookiecutter Data Science template.
+Added are the `tests` folder as well as the `model_config.py` and the
+`metric_config.py`. Plus, `make_dataset.py` was renamed to
+`generic_processing.py`.
 
 ```nohighlight
 ├── LICENSE
@@ -78,7 +211,7 @@ cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
 ├── {{ cookiecutter.module_name }}                <- Source code for use in this project.
 │   ├── __init__.py    <- Makes {{ cookiecutter.module_name }} a Python module
 │   │
-│   ├── data           <- Scripts to download or generate data
+│   ├── data           <- Scripts to download or generate data and for generic transformations
 │   │   └── generic_processing.py
 │   │
 │   ├── features       <- Scripts to turn raw data into features for modeling
@@ -86,12 +219,16 @@ cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
 │   │
 │   ├── models         <- Scripts to train models and then use trained models to make
 │   │   │                 predictions
+│   │   ├── metric_config.py <- Contains the dictionary that configures the
+│   │   │                       metrics used to evaluate your models
+│   │   ├── model_config.py <- Contains the dictionary that configures the
+│   │   │                       models to train and the target value
 │   │   ├── predict_model.py
 │   │   └── train_model.py
 │   │
 │   └── visualization  <- Scripts to create exploratory and results oriented visualizations
 │       └── visualize.py
-├── tests              <- Folder for test code with initial tests for 100% coverage
+├── tests              <- Folder with initial tests for 100% coverage
 └── tox.ini            <- tox file with settings for running tox; see tox.testrun.org
 ```
 
