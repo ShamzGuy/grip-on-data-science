@@ -75,7 +75,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="https://github.com/waveFrontSet/cookiecutter-data-science/edit/master/docs/docs/index.md"><i class="fab fa-github"></i> Edit on GitHub</a>
+                        <a href="https://github.com/waveFrontSet/grip-on-data-science/edit/master/docs/docs/index.md"><i class="fab fa-github"></i> Edit on GitHub</a>
                     </li>
             </ul>
         </div>
@@ -180,6 +180,7 @@ $ conda install cookiecutter
 <pre><code class="nohighlight">cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
 </code></pre>
 
+<hr />
 <h4 id="create-a-new-environment">Create a new environment</h4>
 <p>After the new project has been created you should create a new <code>conda</code> environment
 using</p>
@@ -187,19 +188,23 @@ using</p>
 </code></pre>
 
 <p>Activate it using <code>conda activate project_name</code>.</p>
+<hr />
 <h4 id="implement-the-dataraw-target">Implement the <code>data/raw</code> target</h4>
 <p>The <code>data/raw</code> target is the specification of how to obtain the raw data of your
 project. At the beginning, it is left empty. Decide what you need to do to
 obtain the raw data and decide how to save it. If necessary, write a script next
 to the <code>generic_processing.py</code> script.</p>
+<hr />
 <h4 id="implement-generic-clean-ups-and-transformations">Implement generic clean ups and transformations</h4>
 <p>The <code>data/interim</code> target is for generic clean ups and transformations
 (examples: Removing unnecessary columns, removing duplicated rows). It aims at
 the <code>generic_processing.py</code> script. Edit it according to your needs.</p>
+<hr />
 <h4 id="implement-transformations-and-aggregations-resulting-in-your-final-dataset">Implement transformations and aggregations resulting in your final dataset</h4>
 <p>The <code>data/processed/dataset.csv</code> target is the road to your final dataset. This
 dataset will be used to train a model. The target aims at the
 <code>build_features.py</code> script. Edit it according to your needs.</p>
+<hr />
 <h4 id="decide-which-models-to-train">Decide which models to train</h4>
 <p>Models are trained via the <code>train</code> target. Edit the <code>MODELS</code> dictionary in the
 <code>model_config.py</code> file to configure which models to train. The <code>TARGET_VALUE</code>
@@ -222,6 +227,7 @@ its key.</p>
 <p>Note that this target automatically invokes the <code>train_test_split</code> target that
 splits <code>data/processed/dataset.csv</code> into a train set <code>train.csv</code> and a test set
 <code>test.csv</code>.</p>
+<hr />
 <h4 id="evaluate-your-models">Evaluate your models</h4>
 <p>Models are evaluated via the <code>evaluate</code> target. Edit the <code>METRICS</code> dictionary in
 the <code>metric_config.py</code> file to configure which metrics to evaluate for each model.</p>
@@ -425,5 +431,5 @@ aws_secret_access_key=myprojectsecretkey
 
 <!--
 MkDocs version : 1.0.4
-Build Date UTC : 2019-12-22 14:29:13
+Build Date UTC : 2019-12-22 14:39:51
 -->
