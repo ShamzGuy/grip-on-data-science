@@ -95,6 +95,7 @@ Starting a new project is as easy as running this command at the command line. N
 cookiecutter https://github.com/waveFrontSet/cookiecutter-data-science
 ```
 
+-------------
 #### Create a new environment
 
 After the new project has been created you should create a new `conda` environment
@@ -106,6 +107,7 @@ make create_environment
 
 Activate it using `conda activate project_name`.
 
+-------------
 #### Implement the `data/raw` target
 
 The `data/raw` target is the specification of how to obtain the raw data of your
@@ -113,18 +115,21 @@ project. At the beginning, it is left empty. Decide what you need to do to
 obtain the raw data and decide how to save it. If necessary, write a script next
 to the `generic_processing.py` script.
 
+-------------
 #### Implement generic clean ups and transformations
 
 The `data/interim` target is for generic clean ups and transformations
 (examples: Removing unnecessary columns, removing duplicated rows). It aims at
 the `generic_processing.py` script. Edit it according to your needs.
 
+-------------
 #### Implement transformations and aggregations resulting in your final dataset
 
 The `data/processed/dataset.csv` target is the road to your final dataset. This
 dataset will be used to train a model. The target aims at the
 `build_features.py` script. Edit it according to your needs.
 
+-------------
 #### Decide which models to train
 
 Models are trained via the `train` target. Edit the `MODELS` dictionary in the
@@ -153,6 +158,7 @@ Note that this target automatically invokes the `train_test_split` target that
 splits `data/processed/dataset.csv` into a train set `train.csv` and a test set
 `test.csv`.
 
+-------------
 #### Evaluate your models
 
 Models are evaluated via the `evaluate` target. Edit the `METRICS` dictionary in
