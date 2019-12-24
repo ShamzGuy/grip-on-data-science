@@ -20,7 +20,7 @@ requirements: environment.lock
 
 environment.lock: environment.yml
 	conda env update -n $(PROJECT_NAME) -f $<
-	conda env export -n $(PROJECT_NAME) -f $@
+	conda env export -n $(PROJECT_NAME) | grep -v "prefix:" > $@
 
 ## Make Dataset
 data: requirements data/processed/dataset.csv
@@ -75,7 +75,7 @@ ifneq ("X$(wildcard ./environment.lock)","X")
 else
 	@echo ">>> Creating lockfile from conda environment specification."
 	conda env create --name $(PROJECT_NAME) python={{ cookiecutter.python_version_number }} -f environment.yml
-	conda env export --name $(PROJECT_NAME) -f environment.lock
+	conda env export --name $(PROJECT_NAME) | grep -v "prefix:" > environment.lock
 endif
 	@echo ">>> New conda env created. Activate with: 'conda activate $(PROJECT_NAME)'"
 
