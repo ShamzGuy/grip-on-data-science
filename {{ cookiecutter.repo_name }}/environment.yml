@@ -9,6 +9,7 @@ dependencies:
   - click
   - Sphinx
   - pytest
+  - black
   - jupyterlab
   - nbconvert
   - pip:
