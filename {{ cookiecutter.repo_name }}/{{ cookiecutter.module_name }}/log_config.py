@@ -25,7 +25,7 @@ LOGGING = {
             "filename": project_dir / "logs/debug.log",
             "formatter": "standard",
             "level": "DEBUG",
-            "maxBytes": 1024,
+            "maxBytes": 1024 * 1024,
             "backupCount": 10,
         },
         "rolling_file_warning": {
@@ -33,7 +33,7 @@ LOGGING = {
             "filename": project_dir / "logs/warnings.log",
             "formatter": "standard",
             "level": "WARNING",
-            "maxBytes": 1024,
+            "maxBytes": 1024 * 1024,
             "backupCount": 10,
         },
     },
@@ -41,5 +41,8 @@ LOGGING = {
         "handlers": ["console", "rolling_file_debug", "rolling_file_warning"],
         "level": LOGLEVEL,
     },
-    "loggers": {"__main__": {"handlers": [], "propagate": True},},
+    "loggers": {
+        "__main__": {"handlers": [], "propagate": True},
+        "{{ cookiecutter.module_name }}": {"handlers": [], "propagate": True},
+    },
 }
