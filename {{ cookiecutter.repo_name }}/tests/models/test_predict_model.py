@@ -1,4 +1,3 @@
-import io
 import json
 import pandas as pd
 from joblib import dump
