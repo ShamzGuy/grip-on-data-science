@@ -1,11 +1,8 @@
-from click.testing import CliRunner
 from {{ cookiecutter.module_name }}.data.generic_processing import main
 
 
-def test_main():
-    runner = CliRunner()
-    with runner.isolated_filesystem():
-        with open("hello.txt", "w") as f:
-            f.write("Hello World!")
-        result = runner.invoke(main, ["hello.txt", "output_path"])
-        assert result.exit_code == 0
+def test_main(runner):
+    with open("hello.txt", "w") as f:
+        f.write("Hello World!")
+    result = runner.invoke(main, ["hello.txt", "output_path"])
+    assert result.exit_code == 0
